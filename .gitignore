@@ -10,3 +10,6 @@ dist
 vault-unseal
 **/.env
 **/bin/**
+
+# Tracked example systemd credential drop-in.
+!scripts/systemd-credentials.conf

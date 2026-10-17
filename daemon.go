@@ -82,7 +82,20 @@ func worker(ctx context.Context, logger *slog.Logger, cancel context.CancelFunc,
 			// online, the unseal can occur using two keys from one instance, and
 			// one key from another.
 
-			for i, token := range conf.Load().Tokens {
+			store, err := conf.Load().shareStore()
+			if err != nil {
+				notify(ctx, wlog, err)
+				errCount++
+				continue
+			}
+			shares, err := store.Load(ctx)
+			if err != nil {
+				notify(ctx, wlog, err)
+				errCount++
+				continue
+			}
+
+			for i, token := range shares {
 				wlog.InfoContext(
 					ctx, "using unseal token",
 					"token", i+1,

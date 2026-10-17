@@ -73,3 +73,11 @@ notify:
   #   https://shoutrrr.nickfedor.com/latest/services/overview/
   urls:
     - "slack://token:token@channel?color=good&icon=man-scientist&botname=Shoutrrrbot"
+
+# Optional alternative to unseal_tokens (remove inline tokens when enabled).
+# See SYSTEMD.md for encrypted provisioning and the required service drop-in.
+# storage:
+#   provider: systemd
+#   credentials:
+#     - vault-unseal-share-1
+#     - vault-unseal-share-2

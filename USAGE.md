@@ -17,6 +17,7 @@ automatically unseals Hashicorp Vault clusters
 - [Usage](#usage)
 - [Global flags](#global-flags)
   - [Logging Flags](#global-flags-logging-flags)
+  - [Share Storage Options](#global-flags-share-storage-options)
   - [Notify Options](#global-flags-notify-options)
   - [TLS Options](#global-flags-tls-options)
 
@@ -60,6 +61,14 @@ The following flags are available globally. See command sections for additional 
 | <a id="flag-log-level"></a>[🔗](#flag-log-level) `--log.level="info"`<br><br>**flag options**:<br><ul><li>`none`</li><li>`debug`</li><li>`info`</li><li>`warn`</li><li>`error`</li></ul> | `LOG_LEVEL` | **string** | logging level \(none: disables logging\)     |
 | <a id="flag-log-json"></a>[🔗](#flag-log-json) `--log.json`                                                                                                                              | `LOG_JSON`  | **bool**   | output logs in JSON format                   |
 | <a id="flag-log-path"></a>[🔗](#flag-log-path) `--log.path=STRING`                                                                                                                       | `LOG_PATH`  | **string** | path to log file \(disables stderr logging\) |
+
+<a id="global-flags-share-storage-options"></a>
+### Share Storage Options
+
+| Flag(s)                                                                                                                | Env vars              | Type                     | Help                                                      |
+|------------------------------------------------------------------------------------------------------------------------|-----------------------|--------------------------|-----------------------------------------------------------|
+| <a id="flag-storage-provider"></a>[🔗](#flag-storage-provider) `--storage.provider=STRING`                           | `STORAGE_PROVIDER`    | **string**               | unseal share provider: config \(default\) or systemd      |
+| <a id="flag-storage-credentials"></a>[🔗](#flag-storage-credentials) `--storage.credentials=STORAGE.CREDENTIALS,...` | `STORAGE_CREDENTIALS` | **slice** (_\[\]string_) | systemd credential names, one Shamir share per credential |
 
 <a id="global-flags-notify-options"></a>
 ### Notify Options
