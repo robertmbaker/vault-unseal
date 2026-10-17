@@ -26,6 +26,11 @@ const (
 	minimumNodes          = 3
 )
 
+type StorageConfig struct {
+	Provider    string   `name:"provider" env:"PROVIDER" help:"unseal share provider: config (default) or systemd" yaml:"provider"`
+	Credentials []string `name:"credentials" env:"CREDENTIALS" help:"systemd credential names, one Shamir share per credential" yaml:"credentials"`
+}
+
 type TLSConfig struct {
 	SkipVerify bool   `name:"skip-verify"  env:"SKIP_VERIFY"  help:"disables tls certificate validation: DO NOT DO THIS" yaml:"skip_verify"`
 	ServerName string `name:"server-name"  env:"SERVER_NAME"  help:"server name to use for tls certificate validation" yaml:"server_name"`
@@ -67,6 +72,8 @@ type Config struct {
 	Nodes           []string `name:"nodes"             env:"NODES"             help:"nodes to connect/provide tokens to" yaml:"vault_nodes"`
 	Tokens          []string `name:"tokens"            env:"TOKENS"            help:"tokens to provide to nodes" yaml:"unseal_tokens"`
 
+	Storage StorageConfig `embed:"" prefix:"storage." envprefix:"STORAGE_" group:"Share Storage Options" yaml:"storage"`
+
 	NotifyMaxElapsed time.Duration `name:"notify-max-elapsed" env:"-" hidden:"" yaml:"notify_max_elapsed"` // Deprecated: use notify.max_elapsed instead.
 	NotifyQueueDelay time.Duration `name:"notify-queue-delay" env:"-" hidden:"" yaml:"notify_queue_delay"` // Deprecated: use notify.queue_delay instead.
 	Notify           NotifyConfig  `embed:"" prefix:"notify." envprefix:"NOTIFY_" group:"Notify Options" yaml:"notify"`
@@ -104,14 +111,19 @@ func (c *Config) Validate(ctx context.Context, logger *slog.Logger) error {
 		)
 	}
 
-	if len(c.Tokens) < 1 {
-		return errors.New("no tokens found in config")
+	store, err := c.shareStore()
+	if err != nil {
+		return err
+	}
+	shares, err := store.Load(ctx)
+	if err != nil {
+		return err
 	}
 
-	if len(c.Tokens) >= 3 {
+	if len(shares) >= 3 {
 		vlog.WarnContext(
-			ctx, "found multiple tokens in the config, make sure this is not a security risk",
-			"count", len(c.Tokens),
+			ctx, "found multiple unseal shares, make sure this is not a security risk",
+			"count", len(shares),
 		)
 	}
 

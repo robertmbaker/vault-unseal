@@ -62,6 +62,9 @@
 
 <!-- template:begin:toc -->
 <!-- do not edit anything in this "template" block, its auto-generated -->
+See [systemd encrypted credential storage](SYSTEMD.md) for optional TPM-backed
+Shamir share storage. Existing configuration-based storage remains the default.
+
 ## :link: Table of Contents
 
   - [Why](#grey_question-why)
